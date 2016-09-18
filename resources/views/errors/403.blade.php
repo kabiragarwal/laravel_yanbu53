@@ -8,10 +8,10 @@
             <div class="col-sm-5 login-box">
                 <div class="panel panel-default">
                     <div class="panel-intro text-center">
-                        <h2 class="logo-title"> Error Page 503</h2>
+                        <h2 class="logo-title"> Error Page 403</h2>
                     </div>
                     <div class="panel-body">
-                        this is a 503 error page.
+                        this is a 403 error page.
                     </div>
                     <div class="panel-footer">
                         <p class="text-center "> <a href="{{url('signin')}}"> Back to Login </a> </p>

@@ -12,10 +12,10 @@
                     </div>
                     <div class="panel-body">
                         <div class="panel-body">
-                            @include ('flash::message') 
+                            @include ('flash::message')
                             <form method="post" action="{{ url('/password_reset') }}" class="form-horizontal">
                                 {{ csrf_field() }}
-                                <input type="hidden" name="token" value="{{ $user->token }}">
+                                <input type="hidden" name="token" value="{{ $userData->token }}">
                                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                     <label for="user-pass" class="control-label">Password:</label>
                                     <div class="input-icon"> <i class="icon-lock fa"></i>
@@ -23,11 +23,11 @@
                                         @if ($errors->has('password'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('password') }}</strong>
-                                        </span> 
+                                        </span>
                                         @endif
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
                                     <label for="user-pass" class="control-label">Confirm Password:</label>
                                     <div class="input-icon"> <i class="icon-lock fa"></i>
@@ -39,7 +39,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <input type="submit" class="btn btn-primary  btn-block" id="inputPassword3" value="Submit">
                                 </div>

@@ -9,12 +9,17 @@ use App\Page;
 use App\Product;
 use App\Category;
 use App\Subcategory;
-use App\Mailers\AppMailer;
+//use App\Mailers\AppMailer;
 use Illuminate\Http\Request;
 use App\Http\Requests\SignupRequest;
 use App\Http\Requests\ContactRequest;
+use App\Notifications\ForgetPasswordNotifications;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactUsEmail;
+use App\notifications\ConfirmSignupNotifications;
 
 class PagesController extends Controller {
+
 
     public function home() {
         $category = Category::with('subCategory')->withCount('product')->get();
@@ -74,16 +79,20 @@ class PagesController extends Controller {
         return view('pages.forgot_password');
     }
 
-    public function post_signup(SignupRequest $request, AppMailer $mailers) {
+    public function post_signup(SignupRequest $request) {
         $user = User::create($request->input());
-        $mailers->sendConfirmationEmail($user);
+        $response = $user->notify(new ConfirmSignupNotifications($user));
+        //$mailers->sendConfirmationEmail($user);
         flash()->success('Your account has been created. Please confirm your email address.');
         return redirect()->back();
     }
 
-    public function post_contact(ContactRequest $request, AppMailer $mailers){
-        //pr($request->all()); exit;
-        $mailers->contactUsEmail($request->all());
+    public function post_contact(ContactRequest $request){
+        $userInstance = new User;
+        $data = $request->all();
+        Mail::to('mglrahul@gmail.com')->send(new ContactUsEmail($data));
+
+        //$mailers->contactUsEmail($request->all());
         flash()->success('Thanks for contacting us.');
         return redirect()->back();
     }
@@ -114,10 +123,9 @@ class PagesController extends Controller {
         ];
     }
 
-    public function post_forgot_password(Request $request, AppMailer $mailers) {
+    public function post_forgot_password(Request $request) {
         $this->validate($request, [ 'email' => 'required|email']);
         $user = User::whereEmail($request->input('email'))->first();
-
         if (!$user) {
             flash()->error("No record Exist for this Email id.");
             return redirect()->back();
@@ -125,19 +133,23 @@ class PagesController extends Controller {
 
         $user->token = str_random(30);
         $user->save();
-        $mailers->passwordResetEmail($user);
+
+        //$userClass = new User;
+        $response =$user->notify(new ForgetPasswordNotifications($user));
+        //dd($response);
+        //$mailers->passwordResetEmail($user);
 
         flash()->success(" An email has been sent to provided email address, Please check your inbox.");
         return redirect()->back();
     }
 
     public function password_reset($token) {
-        $user = User::whereToken($token)->first();
-        if (!$user) {
+        $userData = User::whereToken($token)->first();
+        if (!$userData) {
             flash()->error("Something is wrong, Please try again.");
             return redirect('forgot_password');
         }
-        return view('pages.password_reset', compact('user'));
+        return view('pages.password_reset', compact('userData'));
     }
 
     public function post_password_reset(Request $request) {

@@ -29,9 +29,10 @@ class AppMailer{
     }
 
     public function passwordResetEmail(User $user){
+        $userData = $user;
         $this->to = $user->email;
         $this->view = 'emails.passwordResetEmail';
-        $this->data = compact('user');
+        $this->data = compact('userData');
 
         $this->deliver();
     }

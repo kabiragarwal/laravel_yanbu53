@@ -140,7 +140,7 @@ class User extends Authenticatable
 
     public function updatePassword($password){
         $this->password = $password;
-        $this->token= null;
+        //$this->token= null;  //change fro password reset
         $this->save();
     }
 

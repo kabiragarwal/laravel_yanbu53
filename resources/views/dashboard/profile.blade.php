@@ -11,7 +11,7 @@
                 <div class="inner-box">
                     <div class="row">
                         <div class="col-md-5 col-xs-4 col-xxs-12">
-                            <h3 class="no-padding text-center-480 useradmin">
+                            <h3 class="no-padding text-center-480 useradmin"> 
 
                                 <a href="#"> {{Html::image(asset('upload/users/'.(($user->image)?$user->image:'default.jpg')), null, ['class'=>"userImg"])}} {{$user->first_name. ' '.$user->last_name}} </a> </h3>
                         </div>
